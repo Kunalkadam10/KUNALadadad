@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>KBC Quiz Game</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #0a0a23;
+            color: white;
+            text-align: center;
+            padding: 50px;
+        }
+        .question-box {
+            border: 2px solid #ffd700;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            background-color: #1e1e3f;
+        }
+        .options button {
+            display: block;
+            margin: 10px auto;
+            padding: 10px 20px;
+            font-size: 18px;
+            border-radius: 5px;
+            border: none;
+            cursor: pointer;
+            background-color: #ffd700;
+            color: black;
+        }
+        .options button:hover {
+            background-color: #ffcc00;
+        }
+        .result {
+            font-size: 22px;
+            margin-top: 20px;
+            color: #00ffcc;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>🧠 Kaun Banega Crorepati - Web Quiz 🪙</h1>
+    <div class="question-box">
+        <h2 id="prize"></h2>
+        <p id="question"></p>
+        <div class="options" id="options"></div>
+        <div class="result" id="result"></div>
+    </div>
+
+    <script>
+        const questions = [
+            "What is the capital of India?",
+            "What is the largest planet in our solar system?",
+            'Who wrote the Indian national anthem "Jana Gana Mana"?',
+            "Which color is formed by mixing red and yellow?",
+            "Which organ in the human body pumps blood?"
+        ];
+
+        const options = [
+            ["A. Mumbai", "B. Kolkata", "C. Chennai", "D. New Delhi"],
+            ["A. Earth", "B. Mars", "C. Jupiter", "D. Venus"],
+            ["A. Mahatma Gandhi", "B. Rabindranath Tagore", "C. Jawaharlal Nehru", "D. Subhas Chandra Bose"],
+            ["A. Green", "B. Orange", "C. Purple", "D. Brown"],
+            ["A. Lungs", "B. Liver", "C. Brain", "D. Heart"]
+        ];
+
+        const answers = ["D", "C", "B", "B", "D"];
+        const prize = [1000, 10000, 100000, 1000000, 10000000];
+
+        let current = 0;
+
+        function loadQuestion() {
+            document.getElementById("prize").textContent = `Question for ₹${prize[current]}`;
+            document.getElementById("question").textContent = questions[current];
+            const optDiv = document.getElementById("options");
+            optDiv.innerHTML = "";
+
+            options[current].forEach((opt, index) => {
+                const btn = document.createElement("button");
+                btn.textContent = opt;
+                btn.onclick = () => checkAnswer(opt[0]);  // first char is option letter
+                optDiv.appendChild(btn);
+            });
+
+            document.getElementById("result").textContent = "";
+        }
+
+        function checkAnswer(choice) {
+            if (choice === answers[current]) {
+                document.getElementById("result").textContent = `✅ Correct! You won ₹${prize[current]}`;
+                current++;
+                if (current < questions.length) {
+                    setTimeout(loadQuestion, 1500);
+                } else {
+                    document.getElementById("result").textContent = `🎉 Congratulations! You won ₹${prize[prize.length - 1]}!`;
+                    document.getElementById("options").innerHTML = "";
+                }
+            } else {
+                document.getElementById("result").textContent = `❌ Wrong Answer. Game Over. You won ₹${current > 0 ? prize[current - 1] : 0}.`;
+                document.getElementById("options").innerHTML = "";
+            }
+        }
+
+        // Start the quiz
+        loadQuestion();
+    </script>
+</body>
+</html>
